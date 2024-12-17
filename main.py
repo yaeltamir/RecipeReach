@@ -7,14 +7,14 @@ import json
 if __name__ == "__main__":
     # מסלול לתמונה לדוגמה
 
-    #image_path="data/fingerpicture.png"
+    image_path="data/fingerpicture.png"
     # image_path="data\\palm.jpeg"
     # image_path="data\\me1.jpg"
     # image_path="data\\me2.jpg"
     # image_path="data\\me3.jpg"
     #image_path="data\me4.jpg"
     #image_path="data\me5.jpg"
-    image_path="PATH"
+    #image_path="PATH"
     # עיבוד התמונה
     data = process_image(image_path)
     # הצגת Bounding Boxes
