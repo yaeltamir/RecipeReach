@@ -6,11 +6,15 @@ import json
 
 if __name__ == "__main__":
     # מסלול לתמונה לדוגמה
-    #image_path = "C:/Users/ACER/Documents/לימודים/שנה ג/סמסטר א/בינה מלאכותית/RecipeReach/RecipeReach/data/lovepik-clap-a-personal-boys-hand-clicking-png-image_400760113_wh1200.png"
-    #image_path = r"C:\Users\ACER\Documents\לימודים\שנה ג\סמסטר א\בינה מלאכותית\RecipeReach\RecipeReach\data\fingerpicture.png"
-   
+
     #image_path="data/fingerpicture.png"
-    image_path="data\palm.jpeg"
+    # image_path="data\\palm.jpeg"
+    # image_path="data\\me1.jpg"
+    # image_path="data\\me2.jpg"
+    # image_path="data\\me3.jpg"
+    #image_path="data\me4.jpg"
+    #image_path="data\me5.jpg"
+    image_path="PATH"
     # עיבוד התמונה
     data = process_image(image_path)
     # הצגת Bounding Boxes
