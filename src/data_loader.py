@@ -1,7 +1,7 @@
 import os
 import json
 import numpy as np
-from sklearn.preprocessing import LabelEncoder
+
 
 label_mapping = {'palm': 0, 'point': 1, 'grip': 2, 'like': 3, 'dislike': 4, 'no_gesture':5}
 
@@ -14,7 +14,7 @@ def flatten_Coordinates(hand_landmarks, target_length):
 
     # הוספת ריפוד אם הווקטור קצר מהאורך הרצוי
     if len(flat_landmarks) < target_length:
-        padding = [0.0] * (target_length - len(flat_landmarks))  # ריפוד עם אפסים
+        padding = [-0.1] * (target_length - len(flat_landmarks))  # ריפוד עם אפסים
         flat_landmarks = np.concatenate((flat_landmarks, padding))
 
     # חיתוך אם הווקטור ארוך מהאורך הרצוי
@@ -26,11 +26,12 @@ def flatten_Coordinates(hand_landmarks, target_length):
 
 # קריאת הקובץ
 def load_data(filename, maxTarget):
+    
     with open(filename, 'r') as f:
         data = json.load(f)
 
-    X = []
-    Y = []
+    hand_coordinates = []
+    gesture_label = []
 
     # הדפסת חלק מהנתונים (כדי לוודא שהנתונים נקראו כראוי)
     for key, obj in data.items():  # מעבר על המילון
@@ -43,10 +44,10 @@ def load_data(filename, maxTarget):
         # המרת התווית בעזרת LabelEncoder
         encoded_label = label_mapping[label]
         
-        X.append(flattened_landmarks)
-        Y.append(encoded_label)
+        hand_coordinates.append(flattened_landmarks)
+        gesture_label.append(encoded_label)
 
-    return np.array(X), np.array(Y)
+    return np.array(hand_coordinates), np.array(gesture_label)
 
 # טעינת נתונים ממספר קבצים
 def load_data_from_files(file_paths):

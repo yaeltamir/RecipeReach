@@ -1,6 +1,5 @@
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout,Masking
+import keras as ker
+
 
 def build_model(input_shape, num_classes):
     """
@@ -9,12 +8,22 @@ def build_model(input_shape, num_classes):
     :param num_classes: מספר המחלקות לסיווג
     :return: המודל המוגדר
     """
-    model = Sequential()
-    model.add(Masking(mask_value=0.0, input_shape=input_shape))  # מסנן ערכי ריפוד (0.0)
-    model.add(Dense(128, activation='relu'))  # שכבת fully-connected עם 128 נוירונים
-    model.add(Dropout(0.5))  # Dropout להורדת סיכוי לאוברפיטינג
-    model.add(Dense(num_classes, activation='softmax'))  # שכבת הפלט לסיווג
-    return model
+    model = ker.models.Sequential() # בונה מודל סדרתי כך שהרשת נוירונים תהיה שכבה אחרי שכבה
+    model.add(ker.layers.Masking(mask_value=-0.1, input_shape=input_shape))  # מתעלם מערכים שהוספנו לריפוד, במקרה זה הערכים מוגדרים כ-0.1
+    
+    #Dense אומר שכל שכבת נוירונים תהיה מחוברת לשכבה קודמת, כאן עושים 128 
+    #ReLU מחזירה את הערך עצמו אם הוא חיובי או 0 אם הוא שלילי 
+    model.add(ker.layers.Dense(128, activation='relu'))  
 
+# Dropout להורדת סיכוי לאוברפיטינג
+# במקרה זה יבחרו 30 אחוז מהנוירונים באופן רנדומלי והם לא יפעלו
+    model.add(ker.layers.Dropout(0.3))  
+
+
+# שכבת הפלט לסיווג
+# מגדיר שהשכבה האחרונה של הנוירונים תהיה כמספר הסיווגים השונים שיש לי 
+#Softmax ממירה את הפלט לווקטור של הסתברויות שסכומן הוא 1.
+    model.add(ker.layers.Dense(num_classes, activation='softmax'))  
+    return model
 
 
