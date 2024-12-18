@@ -57,5 +57,5 @@ def process_image(image_path):
                                      int(united_x_max - united_x_min), int(united_y_max - united_y_min)]
 
     hands.close()
-    return output
+    return output,output["hand_landmarks"]
 
