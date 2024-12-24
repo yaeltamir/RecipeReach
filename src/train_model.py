@@ -17,6 +17,7 @@ dataset_files = [
     'dataset/palm.json',
     'dataset/grip.json',
     'dataset/point.json'
+    ,'dataset/no_gesture.json'
 ]
 
 # שלב 1: טוענים את הנתונים
@@ -73,80 +74,33 @@ print(f"build model running time : {end_time_build-start_time_build:.4f} sec")
 print(f"train model running time : {end_time_train-start_time_train:.4f} sec")
 print(f"overall running time : {elapsed_time:.4f} sec")
 
-def convert_input_to_array(input_data):
-    """
-    ממירה רשימה של מילונים למערך numpy המתאים לקלט המודל.
-    כל מילון מומר למערך [x, y].
-    
-    :param input_data: רשימה של מילונים עם המפתחות 'x' ו-'y'.
-    :return: מערך numpy בגודל (1, time_steps, 2).
-    """
-    # הפיכת המילונים לרשימה של רשימות [x, y]
-    converted_data = [[point['x'], point['y']] for point in input_data[0]]
-    
-    # המרה למערך numpy והוספת ממד ראשון (batch size)
-    return np.array([converted_data], dtype=np.float32)
-new_input_features,t=load_data('data/output/result.json',42,True)
-# data,new_input = process_image("data\\palm.jpeg")
+new_input_features,t=load_data('data/output/result_like.json',42,True)
 
-# #print(flatten_Coordinates(convert_input_to_array(new_input),42).shape)
-# #print(convert_input_to_array(new_input)[0])
-#    # חיזוי בעזרת המודל
-# prediction = model.predict(np.array([[0.4253077 , 0.8778372 ],
-#        [0.5786977 , 0.80821514],
-#        [0.69370943, 0.6865734 ],
-#        [0.76201683, 0.56195796],
-#        [0.83656836, 0.4754991 ],
-#        [0.5572408 , 0.47157124],
-#        [0.5774329 , 0.29879647],
-#        [0.588399  , 0.19303623],
-#        [0.5949183 , 0.10011345],
-#        [0.46201143, 0.4617218 ],
-#        [0.4630314 , 0.28272736],
-#        [0.46499395, 0.1682826 ],
-#        [0.46593177, 0.07301268],
-#        [0.37390673, 0.48605275],
-#        [0.3609959 , 0.32040113],
-#        [0.35886654, 0.21600407],
-#        [0.36004448, 0.12867588],
-#        [0.28760362, 0.5394994 ],
-#        [0.24467117, 0.41248232],
-#        [0.22155523, 0.33095038],
-#        [0.20601702, 0.25385135],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ],
-#        [2.        , 2.        ]])
-# )
+# טעינת המודל המאומן
+model = ker.models.load_model('hand_gesture_model.keras')
+
+# print(new_input_features)
+# prediction = model.predict(new_input_features)
+# # הדפסת התוצאה
+# print("\nPrediction:")
+# print(prediction)
+
+label_mapping = {'palm': 0, 'point': 1, 'grip': 2, 'like': 3, 'dislike': 4, 'no_gesture': 5}
+# הפוך את המילון כדי למפות מאינדקס לתווית
+index_to_label = {v: k for k, v in label_mapping.items()}
+
+# נתוני קלט חדשים
 print(new_input_features)
 prediction = model.predict(new_input_features)
-# הדפסת התוצאה
+# מציאת האינדקס של הערך המקסימלי וההסתברות
+predicted_label_index = np.argmax(prediction, axis=1)  # האינדקס של הערך המקסימלי
+confidence_scores = np.max(prediction, axis=1)  # הערך המקסימלי (מידת הביטחון)
+
+# המרת האינדקס לתוויות
+predicted_labels = [index_to_label[idx] for idx in predicted_label_index]
+
+# הדפסת התוצאות
 print("\nPrediction:")
-print(prediction)
+for label, confidence in zip(predicted_labels, confidence_scores):
+    print(f"Label: {label}, Confidence: {confidence:.2%}")
+

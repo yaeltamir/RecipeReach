@@ -26,8 +26,8 @@ def visualize_landmarks(image_path, output):
     # ציור נקודות ציון
     for hand_landmarks in output["hand_landmarks"]:
         for point in hand_landmarks:
-            x = int(point["x"] * image.shape[1])
-            y = int(point["y"] * image.shape[0])
+            x = int(point[0] * image.shape[1])
+            y = int(point[1] * image.shape[0])
             cv2.circle(image, (x, y), 5, (0, 0, 255), -1)  # נקודה אדומה
 
     # הצגת התמונה

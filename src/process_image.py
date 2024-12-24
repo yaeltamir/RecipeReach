@@ -16,6 +16,7 @@ def process_image(image_path):
     # הפעלת זיהוי הידיים
     results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
+
     output = {
         "bboxes": [],
         "united_bbox": None,
@@ -41,7 +42,7 @@ def process_image(image_path):
             output["bboxes"].append(bbox)
 
             # נקודות ציון
-            landmarks = [{"x": lm.x, "y": lm.y} for lm in hand_landmarks.landmark]
+            landmarks = [[lm.x,lm.y] for lm in hand_landmarks.landmark]
             output["hand_landmarks"].append(landmarks)
 
         # חישוב תיבת גבול מאוחדת אם יש שתי ידיים
@@ -57,5 +58,5 @@ def process_image(image_path):
                                      int(united_x_max - united_x_min), int(united_y_max - united_y_min)]
 
     hands.close()
-    return output,output["hand_landmarks"]
+    return output
 

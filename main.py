@@ -5,31 +5,36 @@ from src.visualize import visualize_bboxes, visualize_landmarks
 import json
 
 if __name__ == "__main__":
-    # מסלול לתמונה לדוגמה
 
-    #image_path="data/fingerpicture.png"
-    #image_path="data\\palm.jpeg"
-    # image_path="data\\me1.jpg"
-    # image_path="data\\me2.jpg"
-    # image_path="data\\me3.jpg"
-    #image_path="data\me4.jpg"
-    #image_path="data\me5.jpg"
-    image_path="data\hodi.jpg"
+    image_paths=[
+        "data/fingerpicture.png",
+        "data\\palm.jpeg",
+        "data\\me1.jpg",
+        "data\\me2.jpg",
+        "data\\me3.jpg",
+        "data\\me4.jpg",
+        "data\\me5.jpg",
+        "data\\hodi.jpg",
+        "data\\dislike.jpeg",
+        "data\\grip1.png",
+        "data\\like.jpeg",
+        "data\\noGesture.jpeg",
+        "data\\like_and_dislike.jpeg",
+        "data\\point.jpeg",
+        "data\\dislike2.jpeg",
+    ]
 
-    # עיבוד התמונה
-    data,new_input = process_image(image_path)
-    # הצגת Bounding Boxes
-    visualize_bboxes(image_path, data)
+    for image in image_paths:
+        # עיבוד התמונה
+        data = process_image(image)
+        # הצגת Bounding Boxes
+        visualize_bboxes(image, data)
+        # הצגת נקודות ציון
+        visualize_landmarks(image, data)
 
-    # הצגת נקודות ציון
-    visualize_landmarks(image_path, data)
-   # print(data)
+        # שמירת התוצאה כקובץ JSON
+        output_path =f"data/output/result_{image[5:image.index('.')]}.json"
+        with open(output_path, "w") as f:
+            json.dump({"temp":data}, f, indent=4)
 
-
-
-    # שמירת התוצאה כקובץ JSON
-    output_path = "data/output/result.json"
-    with open(output_path, "w") as f:
-        json.dump(data, f, indent=4)
-
-    print(f"Processed image saved to {output_path}")
+        print(f"Processed image saved to {output_path}")

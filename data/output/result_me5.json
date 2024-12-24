@@ -1,0 +1,13 @@
+{
+    "temp": {
+        "bboxes": [],
+        "united_bbox": null,
+        "user_id": "0fdfbd2f-fb5b-4709-a8a3-d23914e4c0f3",
+        "hand_landmarks": [[[0,0]]],
+        "meta": {
+            "age": null,
+            "gender": null,
+            "race": null
+        }
+    }
+}

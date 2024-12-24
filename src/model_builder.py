@@ -9,15 +9,21 @@ def build_model(input_shape, num_classes):
     :return: המודל המוגדר
     """
     model = ker.models.Sequential() # בונה מודל סדרתי כך שהרשת נוירונים תהיה שכבה אחרי שכבה
-    model.add(ker.layers.Masking(mask_value=2.0, input_shape=input_shape))  # מתעלם מערכים שהוספנו לריפוד, במקרה זה הערכים מוגדרים כ-0.1
+    model.add(ker.layers.Masking(mask_value=2.0, input_shape=input_shape))  # מתעלם מערכים שהוספנו לריפוד, במקרה זה הערכים מוגדרים כ-2
+   
     model.add(ker.layers.Flatten(input_shape=input_shape))  # הפיכת הקלט לוקטור אחד-----------------------------------------
     #Dense אומר שכל שכבת נוירונים תהיה מחוברת לשכבה קודמת, כאן עושים 128 
+    model.add(ker.layers.Dense(256, activation='relu')) 
+    model.add( ker.layers.Dropout(0.4)) 
     #ReLU מחזירה את הערך עצמו אם הוא חיובי או 0 אם הוא שלילי 
     model.add(ker.layers.Dense(128, activation='relu'))  
 
 # Dropout להורדת סיכוי לאוברפיטינג
 # במקרה זה יבחרו 30 אחוז מהנוירונים באופן רנדומלי והם לא יפעלו
     model.add(ker.layers.Dropout(0.3))  
+    model.add( ker.layers.Dense(64, activation='relu'))  
+    model.add( ker.layers.Dropout(0.2))                                                # שכבת Dropout למניעת Overfitting
+    model.add( ker.layers.Dense(32, activation='relu'))
 
 
 # שכבת הפלט לסיווג
