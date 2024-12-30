@@ -9,9 +9,11 @@ def build_model(input_shape, num_classes):
     :return: המודל המוגדר
     """
     model = ker.models.Sequential() # בונה מודל סדרתי כך שהרשת נוירונים תהיה שכבה אחרי שכבה
-    model.add(ker.layers.Masking(mask_value=2.0, input_shape=input_shape))  # מתעלם מערכים שהוספנו לריפוד, במקרה זה הערכים מוגדרים כ-2
+    model.add(ker.layers.Masking(mask_value=[2.0,2.0], input_shape=input_shape))  # מתעלם מערכים שהוספנו לריפוד, במקרה זה הערכים מוגדרים כ-2
    
     model.add(ker.layers.Flatten(input_shape=input_shape))  # הפיכת הקלט לוקטור אחד-----------------------------------------
+    #model.add(ker.layers.Masking(mask_value=2.0, input_shape=input_shape))
+    #model.add(ker.layers.GlobalAveragePooling1D())
     #Dense אומר שכל שכבת נוירונים תהיה מחוברת לשכבה קודמת, כאן עושים 128 
     model.add(ker.layers.Dense(256, activation='relu')) 
     model.add( ker.layers.Dropout(0.4)) 

@@ -96,7 +96,7 @@ def flatten_Coordinates(hand_landmarks, target_length):
 
     if len(hand_landmarks) < target_length:
         # ריפוד עם נקודות אפס (0,0)
-        padding = [[2.0, 2.0]] * (target_length - len(hand_landmarks))
+        padding = [[-2.0, -2.0]] * (target_length - len(hand_landmarks))
         #print(padding)
         hand_landmarks = np.vstack((hand_landmarks, padding))
     

@@ -7,13 +7,14 @@ import json
 if __name__ == "__main__":
 
     image_paths=[
+        "data\\grip1.jpg",
+        "data\\grip2.jpg",
         "data/fingerpicture.png",
         "data\\palm.jpeg",
         "data\\me1.jpg",
         "data\\me2.jpg",
         "data\\me3.jpg",
         "data\\me4.jpg",
-        "data\\me5.jpg",
         "data\\hodi.jpg",
         "data\\dislike.jpeg",
         "data\\grip1.png",
@@ -21,7 +22,7 @@ if __name__ == "__main__":
         "data\\noGesture.jpeg",
         "data\\like_and_dislike.jpeg",
         "data\\point.jpeg",
-        "data\\dislike2.jpeg",
+        "data\\dislike2.jpeg"
     ]
 
     for image in image_paths:

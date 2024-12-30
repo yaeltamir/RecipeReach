@@ -2,8 +2,8 @@
     "temp": {
         "bboxes": [],
         "united_bbox": null,
-        "user_id": "0fdfbd2f-fb5b-4709-a8a3-d23914e4c0f3",
-        "hand_landmarks": [[[0,0]]],
+        "user_id": "1ae12c4e-6a9e-4aec-8d2e-6a4862b7eca3",
+        "hand_landmarks": [[[2.0,2.0]]],
         "meta": {
             "age": null,
             "gender": null,
