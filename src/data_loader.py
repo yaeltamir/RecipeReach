@@ -127,9 +127,9 @@ def load_data(filename, maxTarget=21,istest=False):
         if len(hand_landmarks) == 0:
             continue
         if not istest:
-            label = obj['labels'][0]  # לוקח את התווית
+            label = obj['labels']  # לוקח את התווית
                     # המרת הסיווג למספר (לדוגמה, "like" → 0)
-            Y.append(label_mapping[label])
+            Y.append(label_mapping[label[0]])
 
 
 

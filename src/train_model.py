@@ -84,10 +84,45 @@ datasetTest_files=[
 
 # # אימון המודל
 #model.fit(features_train, labels_train, epochs=10, batch_size=32, class_weight=class_weight_dict,validation_data=(features_test, labels_test))
+datasetTrain_files=[
+    'dataset/train/like_train.json',
+    'dataset/train/dislike_train.json',
+    'dataset/train/palm_train.json',
+    'dataset/train/grip_train.json',
+    'dataset/train/point_train.json',
+    'dataset/train/no_gesture_train.json'
+    ]
 
-features_train, features_test, labels_train, labels_test = train_test_split(
-    features, labels, test_size=0.25, random_state=42
-)
+datasetTest_files=[
+    'dataset/test/like_test.json',
+    'dataset/test/dislike_test.json',
+    'dataset/test/palm__test.json',
+    'dataset/test/grip_test.json',
+    'dataset/test/point_test.json',
+    'dataset/test/no_gesture__test.json'
+]
+
+datasetValidate_files = [
+    'dataset/like.json',
+    'dataset/dislike.json',
+    'dataset/palm.json',
+    'dataset/grip.json',
+    'dataset/point.json',
+    'dataset/no_gesture.json'
+]
+features_train,labels_train=load_data_from_files(datasetTrain_files)
+num_categories=len(np.unique(labels_train))
+labels_train = ker.utils.to_categorical(labels_train, num_classes=num_categories)
+
+features_test,labels_test=load_data_from_files(datasetTest_files,features_train.shape[1])
+labels_test = ker.utils.to_categorical(labels_test, num_classes=num_categories)
+
+features_validate,labels_validate=load_data_from_files(datasetValidate_files,features_train.shape[1])
+labels_validate = ker.utils.to_categorical(labels_validate, num_classes=num_categories)
+
+# features_train, features_test, labels_train, labels_test = train_test_split(
+#     features, labels, test_size=0.25, random_state=42
+# )
 # חישוב המשקלים
 class_weights = compute_class_weight(
     class_weight='balanced',  # איזון אוטומטי לפי כמות הדוגמאות
@@ -103,7 +138,7 @@ model.fit(features_train, labels_train, epochs=10, batch_size=32, validation_dat
 #end_time_train = time.time()
 
 # # # שמירת המודל לאחר האימון
-model.save('hand_gesture_model.keras')
+model.save('hand_gesture_model_v3.keras')
 
 # # # # שמירת הזמן בסוף הריצה
 # end_time = time.time()
@@ -116,20 +151,20 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # חיזוי על נתוני הבדיקה
-predictions = model.predict(features_test)
+predictions = model.predict(features_validate)
 predicted_labels = np.argmax(predictions, axis=1)
-true_labels = np.argmax(labels_test, axis=1)
+true_labels = np.argmax(labels_validate, axis=1)
 
 # הפקת מטריצת בלבול
 cm = confusion_matrix(true_labels, predicted_labels)
-# sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=numerical_labels, yticklabels=numerical_labels)
-# plt.xlabel('Predicted Labels')
-# plt.ylabel('True Labels')
-# plt.title('Confusion Matrix')
-# plt.show()
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=[0,1,2,3,4,5], yticklabels=[0,1,2,3,4,5])
+plt.xlabel('Predicted Labels')
+plt.ylabel('True Labels')
+plt.title('Confusion Matrix')
+plt.show()
 
 # דוח ביצועים
-#print(classification_report(true_labels, predicted_labels, target_names=labels))
+print(classification_report(true_labels, predicted_labels, target_names=["0","1","2","3","4","5"]))
 
 
 # # # # הדפסת התוצאה
@@ -142,7 +177,7 @@ label_mapping = {'palm': 0, 'point': 1, 'grip': 2, 'like': 3, 'dislike': 4, 'no_
 # הפוך את המילון כדי למפות מאינדקס לתווית
 index_to_label = {label_name: label_key for label_key, label_name in label_mapping.items()}
 # טעינת המודל המאומן
-model = ker.models.load_model('hand_gesture_model.keras')
+model = ker.models.load_model('hand_gesture_model_v3.keras')
 
 
 
