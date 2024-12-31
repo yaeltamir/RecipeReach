@@ -2,6 +2,7 @@ import keras as ker
 import numpy as np
 from data_loader import load_data_from_files
 
+DATASET_PATH='dataset'
 datasetTrain_files=[
     'dataset/like_train.json',
     'dataset/dislike_train.json',
