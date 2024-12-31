@@ -7,8 +7,11 @@ import json
 if __name__ == "__main__":
 
     image_paths=[
-        "data\\grip1.jpg",
-        "data\\grip2.jpg",
+        "data\\grip3.jpg",
+        "data\\grip4.jpg",
+        "data\\grip5.jpg",
+        "data\\grip6.jpg",
+        "data\\grip7.jpg",
         "data/fingerpicture.png",
         "data\\palm.jpeg",
         "data\\me1.jpg",
@@ -22,7 +25,8 @@ if __name__ == "__main__":
         "data\\noGesture.jpeg",
         "data\\like_and_dislike.jpeg",
         "data\\point.jpeg",
-        "data\\dislike2.jpeg"
+        "data\\dislike2.jpeg",
+        "data\\grip.png"
     ]
 
     for image in image_paths:
@@ -39,3 +43,4 @@ if __name__ == "__main__":
             json.dump({"temp":data}, f, indent=4)
 
         print(f"Processed image saved to {output_path}")
+

@@ -51,13 +51,14 @@ label_mapping = {'palm': 0, 'point': 1, 'grip': 2, 'like': 3, 'dislike': 4, 'no_
 #     return np.array(hand_coordinates), np.array(gesture_label)
 
 # טעינת נתונים ממספר קבצים
-def load_data_from_files(file_paths):
+def load_data_from_files(file_paths,maxTarget=-1):
     """
     טוען נתונים ממספר קבצים ומאחד את כל הדוגמאות ל-X ו-Y.
     """
     X, Y = [], []
 
-    maxTarget =get_max_length(file_paths)
+    if maxTarget==-1:
+        maxTarget =get_max_length(file_paths)
 
     for file_path in file_paths:
         x_data, y_data = load_data(file_path,maxTarget)
