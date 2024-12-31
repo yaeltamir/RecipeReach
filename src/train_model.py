@@ -20,23 +20,6 @@ load_path=r"data/output"
 
 num_categories=len(label_mapping)
 
-# start_load_data = time.time()
-# train,test,validate=prepare_datasets(num_categories)
-# print("time to load all the data= ",time.time()-start_load_data)
-
-# with open("model_input_length.txt", "w") as f:
-#     f.write(str(train['features'].shape[1]))
-
-# build_model("hand_gesture_model_withTheGivenSplit",num_categories,train,test)
-
-# features_train, features_test, labels_train, labels_test = train_test_split(
-#     train['features'],train['labels'], test_size=0.25, random_state=42
-# )
-
-# build_model("hand_gesture_model_fitOnlyByTrainSet",num_categories,{'features':features_train,'labels':labels_train},{'features':features_test,'labels':labels_test})
-
-
-
 def predict_gesture(model, json_file_path,name):
     with open("model_input_length.txt", "r") as f:
         model_input_length= int(f.read())

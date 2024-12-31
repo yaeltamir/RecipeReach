@@ -3,19 +3,13 @@ import cv2
 import mediapipe as mp
 import uuid
 
-def process_image(image_path):
+def process_image(image_frame):
     # מיזוג הכלים של MediaPipe
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(static_image_mode=True, max_num_hands=2, min_detection_confidence=0.5)
-    mp_drawing = mp.solutions.drawing_utils
-
     # קריאת התמונה
-    image = cv2.imread(image_path)
-    height, width, _ = image.shape
-
-    # הפעלת זיהוי הידיים
-    results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-
+    height, width, _ = image_frame.shape
+    results = hands.process(cv2.cvtColor(image_frame, cv2.COLOR_BGR2RGB))
 
     output = {
         "bboxes": [],
