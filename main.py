@@ -1,4 +1,4 @@
-# קובץ ראשי להרצה
+# Main file for execution
 
 from src.process_image import process_image
 from src.visualize import visualize_bboxes, visualize_landmarks
@@ -6,7 +6,8 @@ import json
 
 if __name__ == "__main__":
 
-    image_paths=[
+    # List of image paths to process
+    image_paths = [
         "data\\grip3.jpg",
         "data\\grip4.jpg",
         "data\\grip5.jpg",
@@ -29,18 +30,20 @@ if __name__ == "__main__":
         "data\\grip.png"
     ]
 
+    # Loop through each image in the list
     for image in image_paths:
-        # עיבוד התמונה
+        # Process the image
         data = process_image(image)
-        # הצגת Bounding Boxes
+        
+        # Visualize and display bounding boxes on the image
         visualize_bboxes(image, data)
-        # הצגת נקודות ציון
+        
+        # Visualize and display hand landmarks on the image
         visualize_landmarks(image, data)
 
-        # שמירת התוצאה כקובץ JSON
-        output_path =f"data/output/result_{image[5:image.index('.')]}.json"
+        # Save the processed result as a JSON file
+        output_path = f"data/output/result_{image[5:image.index('.')]}.json"
         with open(output_path, "w") as f:
-            json.dump({"temp":data}, f, indent=4)
+            json.dump({"temp": data}, f, indent=4)
 
         print(f"Processed image saved to {output_path}")
-
