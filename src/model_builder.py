@@ -32,34 +32,42 @@ datasetValidate_files = [
 ]
 
 
-
 def define_model(input_shape, num_classes):
     """
-    בונה את המודל לרשת הנוירונים.
-    :param input_shape: צורת הקלט (אורך וקטור הנתונים)
-    :param num_classes: מספר המחלקות לסיווג
-    :return: המודל המוגדר
+    Builds a neural network model.
+    
+    :param input_shape: Shape of the input (length of the data vector)
+    :param num_classes: Number of classification categories
+    :return: The defined model
     """
-    model = ker.models.Sequential() # בונה מודל סדרתי כך שהרשת נוירונים תהיה שכבה אחרי שכבה
-    model.add(ker.layers.Masking(mask_value=[-2.0,-2.0], input_shape=input_shape))  # מתעלם מערכים שהוספנו לריפוד, במקרה זה הערכים מוגדרים כ-2
-   
-    model.add(ker.layers.Flatten(input_shape=input_shape))  # הפיכת הקלט לוקטור אחד-----------------------------------------
-    #Dense אומר שכל שכבת נוירונים תהיה מחוברת לשכבה קודמת, כאן עושים 256 
-    model.add(ker.layers.Dense(256, activation='relu')) 
-    model.add( ker.layers.Dropout(0.4)) 
-    #ReLU מחזירה את הערך עצמו אם הוא חיובי או 0 אם הוא שלילי 
+    model = ker.models.Sequential()  # Creates a sequential model where layers are added one after another
+    
+    # Ignores padding values added to the input; in this case, the mask values are set to [-2.0, -2.0]
+    model.add(ker.layers.Masking(mask_value=[-2.0, -2.0], input_shape=input_shape))  
+    
+    # Flattens the input into a single vector
+    model.add(ker.layers.Flatten(input_shape=input_shape))  
+    
+    # Fully connected layer with 256 neurons
+    model.add(ker.layers.Dense(256, activation='relu'))  
+    model.add(ker.layers.Dropout(0.4))  # Dropout to reduce overfitting (randomly disables 40% of neurons)
+    
+    # ReLU returns the input value if positive or 0 if negative
     model.add(ker.layers.Dense(128, activation='relu'))  
-    # Dropout להורדת סיכוי לאוברפיטינג
-    # במקרה זה יבחרו 35 אחוז מהנוירונים באופן רנדומלי והם לא יפעלו
-    model.add(ker.layers.Dropout(0.35))  
-    model.add( ker.layers.Dense(64, activation='relu'))  
-    model.add( ker.layers.Dropout(0.3))                                              
-    model.add( ker.layers.Dense(32, activation='relu'))
-    # שכבת הפלט לסיווג
-    # מגדיר שהשכבה האחרונה של הנוירונים תהיה כמספר הסיווגים השונים שיש לי 
-    #Softmax ממירה את הפלט לווקטור של הסתברויות שסכומן הוא 1.
+    model.add(ker.layers.Dropout(0.35))  # Dropout layer (35% of neurons are randomly disabled)
+    
+    model.add(ker.layers.Dense(64, activation='relu'))  
+    model.add(ker.layers.Dropout(0.3))  # Dropout layer (30% of neurons are randomly disabled)
+    
+    model.add(ker.layers.Dense(32, activation='relu'))  
+    
+    # Output layer for classification
+    # The last layer has as many neurons as the number of classification categories
+    # Softmax converts the output into a probability vector summing to 1
     model.add(ker.layers.Dense(num_classes, activation='softmax'))  
+    
     return model
+
   
 
 def prepare_datasets(num_categories):
@@ -88,32 +96,49 @@ def prepare_datasets(num_categories):
            {'features':features_test,'labels':labels_test}
 
 
-def build_model(model_name,num_categories,train_set,test_set,num_epochs=10,size_batch=32):
-    input_shape=(train_set['features'].shape[1],train_set['features'].shape[2])
+def build_model(model_name, num_categories, train_set, test_set, num_epochs=10, size_batch=32):
+    """
+    Builds, compiles, and trains a neural network model.
+
+    :param model_name: Name for saving the trained model.
+    :param num_categories: Number of classification categories.
+    :param train_set: Training dataset containing 'features' and 'labels'.
+    :param test_set: Testing dataset containing 'features' and 'labels'.
+    :param num_epochs: Number of training iterations (default is 10).
+    :param size_batch: Batch size for training (default is 32).
+    :return: None (saves the trained model).
+    """
+    input_shape = (train_set['features'].shape[1], train_set['features'].shape[2])
     model = define_model(input_shape, num_categories)
 
-    '''
-    optimizer='adam': אלגוריתם אופטימיזציה מתאם, משלב את היתרונות של Momentum ו-RMSprop, ומעדכן את המשקלים באופן אוטומטי במהלך האימון.
+    """
+    optimizer='adam': Adaptive optimization algorithm combining Momentum and RMSprop, automatically updating weights during training.
 
-    loss='categorical_crossentropy': פונקציית אובדן שמתאימה לבעיות סיווג מרובות קטגוריות, ומודדת את השגיאה בין התוצאות החזויות לאמיתיות.
+    loss='categorical_crossentropy': Loss function for multi-class classification, measuring the error between predicted and actual labels.
 
-    metrics=['accuracy']: מדד לבחינת ביצועי המודל, מחשב את אחוז ההתאמה בין התוצאה החזויה לאמיתית.
-    '''
+    metrics=['accuracy']: Evaluation metric that calculates the percentage of correctly classified samples.
+    """
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     model.summary()
 
-    # חישוב המשקלים
+    # Compute class weights
     class_weights = compute_class_weight(
-    class_weight='balanced',  # איזון אוטומטי לפי כמות הדוגמאות
-    classes=np.unique(np.argmax(train_set['labels'], axis=1)),  # מחלקות ייחודיות
-    y=np.argmax(train_set['labels'], axis=1)  # תוויות המחלקות
+        class_weight='balanced',  # Automatically balances weights based on sample distribution
+        classes=np.unique(np.argmax(train_set['labels'], axis=1)),  # Unique class labels
+        y=np.argmax(train_set['labels'], axis=1)  # Class labels
     )
     class_weight_dict = dict(enumerate(class_weights))
     print("Class Weights:", class_weight_dict)
 
-    model.fit(train_set['features'], train_set['labels'], epochs=num_epochs, batch_size=size_batch, validation_data=(test_set['features'], test_set['labels']),class_weight=class_weight_dict)
+    # Train the model
+    model.fit(train_set['features'], train_set['labels'], 
+              epochs=num_epochs, batch_size=size_batch, 
+              validation_data=(test_set['features'], test_set['labels']), 
+              class_weight=class_weight_dict)
 
+    # Save the trained model
     model.save(f'{model_name}.keras')
+
 
 
 

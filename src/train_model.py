@@ -11,7 +11,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 label_mapping = {'palm': 0, 'point': 1, 'grip': 2, 'like': 3, 'dislike': 4, 'no_gesture': 5}
-models_names=["hand_gesture_model_withTheGivenSplit","hand_gesture_model_fitOnlyByTrainSet"]
+#models_names=["hand_gesture_model_withTheGivenSplit","hand_gesture_model_fitOnlyByTrainSet"]
+models_names=["hand_gesture_model"]
 label_names=[key for key,val in label_mapping.items() ]
 
 # מסלול לתיקייה

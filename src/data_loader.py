@@ -108,12 +108,14 @@ def flatten_Coordinates(hand_landmarks, target_length):
     return hand_landmarks
 
 
-def load_data(filename, maxTarget=21,istest=False):
+def load_data(filename, maxTarget=21, istest=False):
     """
-    קורא קובץ JSON ומכין את הנתונים עבור אימון המודל.
-    :param filename: שם הקובץ
-    :param maxTarget: מספר נקודות היד הרצויות
-    :return: מערכים numpy של features ו-labels
+    Reads a JSON file and prepares the data for model training.
+    
+    :param filename: Name of the file
+    :param maxTarget: Desired number of hand keypoints
+    :param istest: Boolean flag indicating if the data is for testing (default is False)
+    :return: NumPy arrays of features (X) and labels (Y)
     """
     with open(filename, 'r') as f:
         data = json.load(f)
@@ -122,22 +124,19 @@ def load_data(filename, maxTarget=21,istest=False):
     Y = []
 
     for obj in data.values():
-        hand_landmarks = obj['hand_landmarks'][0]  # לוקח את מערך הנקודות הפנימי
-                # print(filename)
+        hand_landmarks = obj['hand_landmarks'][0]  # Extracts the first set of hand landmarks
+
         if len(hand_landmarks) == 0:
             continue
+        
         if not istest:
-            label = obj['labels']  # לוקח את התווית
-                    # המרת הסיווג למספר (לדוגמה, "like" → 0)
+            label = obj['labels']  # Retrieves the label
+            # Converts the classification into a numerical value (e.g., "like" → 0)
             Y.append(label_mapping[label[0]])
 
-
-
-        # הבטחת גודל אחיד למספר נקודות היד
+        # Ensures a uniform size for the number of hand keypoints
         flattened_landmarks = flatten_Coordinates(hand_landmarks, maxTarget)
         X.append(flattened_landmarks)
-        
-
 
     return np.array(X), np.array(Y)
 
